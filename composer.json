@@ -1,0 +1,21 @@
+{
+  "name": "pfcode/mpcl-connector-php",
+  "description": "MyPClist PHP Connector",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "pfcode",
+      "email": "mail@pfco.de"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "pfcode\\MpclConnector\\": [
+        "src/",
+        "src/Models",
+        "src/Commons"
+      ]
+    }
+  }
+}
