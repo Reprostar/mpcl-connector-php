@@ -7,7 +7,7 @@
  * Time: 00:04
  */
 
-namespace pfcode\MpclConnector;
+namespace Reprostar\MpclConnector;
 
 class MpclMachineRemoteModel extends RemoteModel
 {

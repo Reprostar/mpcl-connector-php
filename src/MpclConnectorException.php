@@ -6,7 +6,7 @@
  * Time: 00:01
  */
 
-namespace pfcode\MpclConnector;
+namespace Reprostar\MpclConnector;
 
 use Exception;
 

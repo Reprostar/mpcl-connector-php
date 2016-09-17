@@ -1,5 +1,5 @@
 {
-  "name": "pfcode/mpcl-connector-php",
+  "name": "reprostar/mpcl-connector-php",
   "description": "MyPClist PHP Connector",
   "minimum-stability": "stable",
   "license": "MIT",
@@ -11,7 +11,7 @@
   ],
   "autoload": {
     "psr-4": {
-      "pfcode\\MpclConnector\\": [
+      "Reprostar\\MpclConnector\\": [
         "src/",
         "src/Models",
         "src/Commons"

@@ -7,7 +7,7 @@
  * Time: 23:58
  */
 
-namespace pfcode\MpclConnector;
+namespace Reprostar\MpclConnector;
 
 class MpclConnector
 {
