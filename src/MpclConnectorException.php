@@ -12,25 +12,25 @@ use Exception;
 
 class MpclConnectorException extends Exception
 {
-    private $received_message;
-    private $received_error_id;
+    private $receivedMessage;
+    private $receivedErrorId;
 
-    public function __construct($message, $received_message = null, $error_id = -1)
+    public function __construct($message, $receivedMessage = null, $errorId = -1)
     {
         parent::__construct($message);
 
-        $this->received_message = $received_message;
-        $this->received_error_id = $error_id;
+        $this->receivedMessage = $receivedMessage;
+        $this->receivedErrorId = $errorId;
     }
 
     /**
      * @return string
      */
     public function getReceivedErrors(){
-        $ret = "#" . (string) intval($this->received_error_id);
+        $ret = "#" . (string) intval($this->receivedErrorId);
 
-        if(!is_null($this->received_message)){
-            $ret .= ": " . $this->received_message;
+        if(!is_null($this->receivedMessage)){
+            $ret .= ": " . $this->receivedMessage;
         } else{
             $ret .= " [Unknown message]";
         }
