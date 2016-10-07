@@ -11,11 +11,15 @@ namespace Reprostar\MpclConnector;
 
 class MpclConnector
 {
-    private $mpcl_host = "http://mypclist.net/api";
+    const DEFAULT_HOST = "http://mypclist.net/api";
+    const DEFAULT_USER_AGENT = "MpclConnectorPHP";
+    const DEFAULT_TIMEOUT = 20;
+
+    private $mpcl_host = self::DEFAULT_HOST;
     private $mpcl_apikey = null;
     private $mpcl_apitoken = null;
-    private $requestTimeout = 20;
-    private $userAgent = "MpclConnectorPHP";
+    private $requestTimeout = self::DEFAULT_TIMEOUT;
+    private $userAgent = self::DEFAULT_USER_AGENT;
 
     private static $timeRequests = 0;
 
@@ -25,19 +29,24 @@ class MpclConnector
      * @param $apitoken
      * @param null $userAgent
      * @param null $requestTimeout
+     * @param null $host
      * @throws MpclConnectorException
      */
-    public function __construct($apikey, $apitoken, $userAgent = null, $requestTimeout = null)
+    public function __construct($apikey, $apitoken, $userAgent = null, $requestTimeout = null, $host = null)
     {
-        $this->mpcl_apikey = $apikey;
-        $this->mpcl_apitoken = $apitoken;
+        $this->mpcl_apikey = (string) $apikey;
+        $this->mpcl_apitoken = (string) $apitoken;
 
-        if($userAgent){
+        if(!is_null($userAgent)){
             $this->userAgent = (string) $userAgent;
         }
 
-        if($requestTimeout){
+        if(!is_null($requestTimeout)){
             $this->requestTimeout = (int) $requestTimeout;
+        }
+
+        if(!is_null($host)){
+            $this->mpcl_host = (string) $host;
         }
 
         if (!function_exists('curl_init')) {
