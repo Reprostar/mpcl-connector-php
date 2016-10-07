@@ -15,27 +15,27 @@ class MpclConnector
     const DEFAULT_USER_AGENT = "MpclConnectorPHP";
     const DEFAULT_TIMEOUT = 20;
 
-    private $mpcl_host = self::DEFAULT_HOST;
-    private $mpcl_apikey = null;
-    private $mpcl_apitoken = null;
+    private $apiHost = self::DEFAULT_HOST;
+    private $apiKey = null;
+    private $apiToken = null;
     private $requestTimeout = self::DEFAULT_TIMEOUT;
     private $userAgent = self::DEFAULT_USER_AGENT;
 
-    private static $timeRequests = 0;
+    private $totalTimeSpent = 0;
 
     /**
      * MpclConnector constructor.
-     * @param $apikey
-     * @param $apitoken
+     * @param $apiKey
+     * @param $apiToken
      * @param null $userAgent
      * @param null $requestTimeout
-     * @param null $host
+     * @param null $apiHost
      * @throws MpclConnectorException
      */
-    public function __construct($apikey, $apitoken, $userAgent = null, $requestTimeout = null, $host = null)
+    public function __construct($apiKey, $apiToken, $userAgent = null, $requestTimeout = null, $apiHost = null)
     {
-        $this->mpcl_apikey = (string) $apikey;
-        $this->mpcl_apitoken = (string) $apitoken;
+        $this->apiKey = (string) $apiKey;
+        $this->apiToken = (string) $apiToken;
 
         if(!is_null($userAgent)){
             $this->userAgent = (string) $userAgent;
@@ -45,13 +45,21 @@ class MpclConnector
             $this->requestTimeout = (int) $requestTimeout;
         }
 
-        if(!is_null($host)){
-            $this->mpcl_host = (string) $host;
+        if(!is_null($apiHost)){
+            $this->apiHost = (string) $apiHost;
         }
 
         if (!function_exists('curl_init')) {
             throw new MpclConnectorException("Curl is not enabled on this server");
         }
+    }
+
+    /**
+     * Get time in seconds spent on the network communication with API server
+     * @return float
+     */
+    public function getTotalTimeSpent(){
+        return $this->totalTimeSpent;
     }
 
     /**
@@ -67,13 +75,13 @@ class MpclConnector
 
         // Build request
         $post["action"] = $action;
-        $post["api_key"] = $this->mpcl_apikey;
-        $post["api_token"] = $this->mpcl_apitoken;
+        $post["api_key"] = $this->apiKey;
+        $post["api_token"] = $this->apiToken;
         $post["params"] = $params;
 
         // Prepare CURL transaction
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->mpcl_host);
+        curl_setopt($ch, CURLOPT_URL, $this->apiHost);
         curl_setopt($ch, CURLOPT_USERAGENT, $this->userAgent);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->requestTimeout);
@@ -83,15 +91,15 @@ class MpclConnector
 
         // Execute transaction & get results
         $response = curl_exec($ch);
-        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-        $result = substr($response, $header_size);
+        $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+        $result = substr($response, $headerSize);
 
         // Close connection
         curl_close($ch);
 
         // Measure duration of this request
         $requestDuration = (microtime(1) - $startTime);
-        self::$timeRequests += $requestDuration;
+        $this->totalTimeSpent += $requestDuration;
 
         // Validate server response
         $ret = json_decode($result, JSON_OBJECT_AS_ARRAY);
