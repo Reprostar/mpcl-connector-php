@@ -108,7 +108,7 @@ class MpclConnector
         }
 
         if ($ret['status'] == "error") {
-            throw new MpclConnectorException("Errors received", $ret['message'], $ret['error_id']);
+            throw new MpclConnectorException("Errors received", $ret['message'], isset($ret['error_id']) ? $ret['error_id'] : -1);
         }
 
         return $ret['response'];
@@ -274,6 +274,101 @@ class MpclConnector
     public function deleteMachine($id){
         return $this->doRequest("DeleteMachine", array(
             "id" => (int) $id
+        ));
+    }
+
+    /**
+     * @param $name
+     * @param int $parentId
+     * @param bool $isVisible
+     * @return MpclCategoryRemoteModel
+     */
+    public function createCategory($name, $parentId = 0, $isVisible = true){
+        $data = $this->doRequest("CreateCategory", array(
+            "name" => (string) $name,
+            "parentId" => (int) $parentId,
+            "isVisible" => (boolean) $isVisible
+        ));
+
+        $model = new MpclCategoryRemoteModel();
+        $model->fromAssoc($data);
+
+        return $model;
+    }
+
+    /**
+     * @param $id
+     * @return bool|mixed
+     */
+    public function deleteCategory($id){
+        return $this->doRequest("DeleteCategory", array(
+            "id" => (int) $id
+        ));
+    }
+
+    /**
+     * @param null $parentId
+     * @return MpclCategoryRemoteModel[]
+     */
+    public function getCategories($parentId = null){
+        $params = array();
+
+        if(!is_null($parentId)){
+            $params['parentId'] = (int) $parentId;
+        }
+
+        $arr = $this->doRequest("GetCategories", $params);
+
+        foreach($arr as $k => $data){
+            $model = new MpclCategoryRemoteModel();
+            $model->fromAssoc($data);
+
+            $arr[$k] = $model;
+        }
+
+        return $arr;
+    }
+
+    /**
+     * @param $id
+     * @param bool $resolvePath
+     * @return MpclCategoryRemoteModel
+     */
+    public function getCategory($id, $resolvePath = false){
+        $data = $this->doRequest("GetCategory", array(
+            "id" => (int) $id,
+            "resolvePath" => (boolean) $resolvePath
+        ));
+
+        $model = new MpclCategoryRemoteModel();
+        $model->fromAssoc($data);
+
+        return $model;
+    }
+
+    /**
+     * @param $id
+     * @param $parentId
+     * @return bool|mixed
+     */
+    public function moveCategory($id, $parentId){
+        return $this->doRequest("MoveCategory", array(
+            "id" => (int) $id,
+            "parentId" => (int) $parentId
+        ));
+    }
+
+    /**
+     * @param $id
+     * @param $name
+     * @param $isVisible
+     * @return bool|mixed
+     */
+    public function updateCategory($id, $name, $isVisible){
+        return $this->doRequest("UpdateCategory", array(
+            "id" => (int) $id,
+            "name" => (string) $name,
+            "isVisible" => (boolean) $isVisible
         ));
     }
 }
