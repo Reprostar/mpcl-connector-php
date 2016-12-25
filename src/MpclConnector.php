@@ -371,4 +371,23 @@ class MpclConnector
             "isVisible" => (boolean) $isVisible
         ));
     }
+
+    /**
+     * @param $data
+     * @return bool|mixed
+     */
+    public function createMachine($data){
+        return $this->updateMachine(-1, $data);
+    }
+
+    /**
+     * @param $id
+     * @param $data
+     * @return bool|mixed
+     */
+    public function updateMachine($id, $data){
+        return $this->doRequest("UpdateMachine", [
+            'id' => (int) $id
+        ] + $data);
+    }
 }
