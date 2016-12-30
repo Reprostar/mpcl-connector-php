@@ -31,4 +31,5 @@ class MpclMachineRemoteModel extends RemoteModel
     public $photos;
     public $is_extension;
     public $is_standalone;
+    public $is_forsale;
 }
