@@ -390,4 +390,21 @@ class MpclConnector
             'id' => (int) $id
         ] + $data);
     }
+
+    /**
+     * @param $data
+     * @param $origName
+     * @return MpclPhotoRemoteModel
+     */
+    public function uploadPhoto($data, $origName){
+        $data = $this->doRequest("UploadPhoto", [
+            'data' => $data,
+            'orig_name' => $origName
+        ]);
+
+        $ret = new MpclPhotoRemoteModel();
+        $ret->fromAssoc($data);
+
+        return $ret;
+    }
 }
