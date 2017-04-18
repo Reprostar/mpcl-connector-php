@@ -209,7 +209,7 @@ class MpclConnector
 
     /**
      * @param $slug
-     * @return MpclUserRemoteModel
+     * @return MpclPhotoRemoteModel
      * @throws MpclConnectorException
      */
     public function getPhoto($slug)
@@ -218,7 +218,7 @@ class MpclConnector
             "slug" => (string) $slug
         ));
 
-        $model = new MpclUserRemoteModel();
+        $model = new MpclPhotoRemoteModel();
         $model->fromAssoc($data);
 
         return $model;

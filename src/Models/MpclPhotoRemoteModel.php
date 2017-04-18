@@ -17,5 +17,7 @@ class MpclPhotoRemoteModel extends RemoteModel
     public $size;
     public $extension;
     public $orig_uri;
+
+    /** @var  MpclPhotoRemoteModel[]|string[] */
     public $thumbnails;
 }

@@ -13,6 +13,8 @@ class MpclMachinesSetRemoteModel extends RemoteModel
 {
     public $total;
     public $length;
+
+    /** @var  MpclMachineRemoteModel[] */
     public $items;
 
     public function fromAssoc(array $assoc)
