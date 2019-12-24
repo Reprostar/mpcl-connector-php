@@ -17,5 +17,9 @@
         "src/Commons"
       ]
     }
+  },
+  "require": {
+    "ext-json": "*",
+    "ext-curl": "*"
   }
 }

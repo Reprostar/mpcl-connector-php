@@ -27,12 +27,12 @@ class MpclConnectorException extends Exception
      * @return string
      */
     public function getReceivedErrors(){
-        $ret = "#" . (string) intval($this->receivedErrorId);
+        $ret = "#{$this->receivedErrorId}";
 
-        if(!is_null($this->receivedMessage)){
-            $ret .= ": " . $this->receivedMessage;
+        if($this->receivedMessage !== null){
+            $ret .= ': ' . $this->receivedMessage;
         } else{
-            $ret .= " [Unknown message]";
+            $ret .= ' [Unknown message]';
         }
 
         return $ret;

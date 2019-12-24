@@ -11,13 +11,13 @@ namespace Reprostar\MpclConnector;
 
 class MpclConnector
 {
-    const DEFAULT_HOST = "http://mypclist.net/api";
-    const DEFAULT_USER_AGENT = "MpclConnectorPHP";
+    const DEFAULT_HOST = 'https://mypclist.net/api/';
+    const DEFAULT_USER_AGENT = 'MpclConnectorPHP';
     const DEFAULT_TIMEOUT = 20;
 
     private $apiHost = self::DEFAULT_HOST;
-    private $apiKey = null;
-    private $apiToken = null;
+    private $apiKey;
+    private $apiToken;
     private $requestTimeout = self::DEFAULT_TIMEOUT;
     private $userAgent = self::DEFAULT_USER_AGENT;
 
@@ -37,20 +37,20 @@ class MpclConnector
         $this->apiKey = (string) $apiKey;
         $this->apiToken = (string) $apiToken;
 
-        if(!is_null($userAgent)){
+        if($userAgent !== null){
             $this->userAgent = (string) $userAgent;
         }
 
-        if(!is_null($requestTimeout)){
+        if($requestTimeout !== null){
             $this->requestTimeout = (int) $requestTimeout;
         }
 
-        if(!is_null($apiHost)){
+        if($apiHost !== null){
             $this->apiHost = (string) $apiHost;
         }
 
         if (!function_exists('curl_init')) {
-            throw new MpclConnectorException("Curl is not enabled on this server");
+            throw new MpclConnectorException('Curl is not enabled on this server');
         }
     }
 
@@ -74,10 +74,10 @@ class MpclConnector
         $startTime = microtime(1);
 
         // Build request
-        $post["action"] = $action;
-        $post["api_key"] = $this->apiKey;
-        $post["api_token"] = $this->apiToken;
-        $post["params"] = $params;
+        $post['action'] = $action;
+        $post['api_key'] = $this->apiKey;
+        $post['api_token'] = $this->apiToken;
+        $post['params'] = $params;
 
         // Prepare CURL transaction
         $ch = curl_init();
@@ -104,11 +104,11 @@ class MpclConnector
         // Validate server response
         $ret = json_decode($result, JSON_OBJECT_AS_ARRAY);
         if (!is_array($ret) || !isset($ret['status'])) {
-            throw new MpclConnectorException("Invalid response format");
+            throw new MpclConnectorException('Invalid response format');
         }
 
-        if ($ret['status'] == "error") {
-            throw new MpclConnectorException("Errors received", $ret['message'], isset($ret['error_id']) ? $ret['error_id'] : -1);
+        if ($ret['status'] === 'error') {
+            throw new MpclConnectorException('Errors received', $ret['message'], isset($ret['error_id']) ? $ret['error_id'] : -1);
         }
 
         return $ret['response'];
@@ -120,7 +120,7 @@ class MpclConnector
      */
     public function ping()
     {
-        return $this->doRequest("Ping");
+        return $this->doRequest('Ping');
     }
 
     /**
@@ -130,8 +130,8 @@ class MpclConnector
      */
     public function getMachine($id)
     {
-        $data = $this->doRequest("GetMachine", array(
-            "id" => (int) $id
+        $data = $this->doRequest('GetMachine', array(
+            'id' => (int) $id
         ));
 
         $model = new MpclMachineRemoteModel();
@@ -147,8 +147,8 @@ class MpclConnector
      */
     public function getUser($id = false)
     {
-        $data =  $this->doRequest("GetUser", array(
-            "id" => (int) $id
+        $data =  $this->doRequest('GetUser', array(
+            'id' => (int) $id
         ));
 
         $model = new MpclUserRemoteModel();
@@ -166,10 +166,10 @@ class MpclConnector
      */
     public function getTypes($query, $limit = 20, $offset = 0)
     {
-        $arr = $this->doRequest("GetTypes", array(
-            "query" => (string) $query,
-            "limit" => (int) $limit,
-            "offset" => (int) $offset
+        $arr = $this->doRequest('GetTypes', array(
+            'query' => (string) $query,
+            'limit' => (int) $limit,
+            'offset' => (int) $offset
         ));
 
         foreach($arr as $k => $data){
@@ -191,10 +191,10 @@ class MpclConnector
      */
     public function getManufacturers($query, $limit = 20, $offset = 0)
     {
-        $arr = $this->doRequest("GetManufacturers", array(
-            "query" => (string) $query,
-            "limit" => (int) $limit,
-            "offset" => (int) $offset
+        $arr = $this->doRequest('GetManufacturers', array(
+            'query' => (string) $query,
+            'limit' => (int) $limit,
+            'offset' => (int) $offset
         ));
 
         foreach($arr as $k => $data){
@@ -214,8 +214,8 @@ class MpclConnector
      */
     public function getPhoto($slug)
     {
-        $data = $this->doRequest("GetPhoto", array(
-            "slug" => (string) $slug
+        $data = $this->doRequest('GetPhoto', array(
+            'slug' => (string) $slug
         ));
 
         $model = new MpclPhotoRemoteModel();
@@ -225,7 +225,7 @@ class MpclConnector
     }
 
     /**
-     * @param bool $ids
+     * @param bool|array $ids
      * @param bool $onlyStandalone
      * @param bool $onlyExtensions
      * @param int $returnFormat - 0: Models, 1: array of IDs
@@ -237,7 +237,7 @@ class MpclConnector
      * @return MpclMachinesSetRemoteModel|array
      * @throws MpclConnectorException
      */
-    public function getMachinesList($ids = false, $onlyStandalone = false, $onlyExtensions = false, $returnFormat = 0, $returnPhotos = 0, $limit = 20, $offset = 0, $orderBy = "id", $orderDir = 2)
+    public function getMachinesList($ids = false, $onlyStandalone = false, $onlyExtensions = false, $returnFormat = 0, $returnPhotos = 0, $limit = 20, $offset = 0, $orderBy = 'id', $orderDir = 2)
     {
         $params = array(
             'onlyStandalone' => $onlyStandalone ? 1 : 0,
@@ -254,16 +254,16 @@ class MpclConnector
             $params['ids'] = $ids;
         }
 
-        $data = $this->doRequest("GetMachinesList", $params);
+        $data = $this->doRequest('GetMachinesList', $params);
 
-        if($returnFormat == 1){
+        if($returnFormat === 1){
             return $data;
-        } else{
-            $model = new MpclMachinesSetRemoteModel();
-            $model->fromAssoc($data);
-
-            return $model;
         }
+
+        $model = new MpclMachinesSetRemoteModel();
+        $model->fromAssoc($data);
+
+        return $model;
     }
 
     /**
@@ -272,8 +272,8 @@ class MpclConnector
      * @throws MpclConnectorException
      */
     public function deleteMachine($id){
-        return $this->doRequest("DeleteMachine", array(
-            "id" => (int) $id
+        return $this->doRequest('DeleteMachine', array(
+            'id' => (int) $id
         ));
     }
 
@@ -282,12 +282,13 @@ class MpclConnector
      * @param int $parentId
      * @param bool $isVisible
      * @return MpclCategoryRemoteModel
+     * @throws MpclConnectorException
      */
     public function createCategory($name, $parentId = 0, $isVisible = true){
-        $data = $this->doRequest("CreateCategory", array(
-            "name" => (string) $name,
-            "parentId" => (int) $parentId,
-            "isVisible" => (boolean) $isVisible
+        $data = $this->doRequest('CreateCategory', array(
+            'name' => (string) $name,
+            'parentId' => (int) $parentId,
+            'isVisible' => (boolean) $isVisible
         ));
 
         $model = new MpclCategoryRemoteModel();
@@ -299,25 +300,27 @@ class MpclConnector
     /**
      * @param $id
      * @return bool|mixed
+     * @throws MpclConnectorException
      */
     public function deleteCategory($id){
-        return $this->doRequest("DeleteCategory", array(
-            "id" => (int) $id
+        return $this->doRequest('DeleteCategory', array(
+            'id' => (int) $id
         ));
     }
 
     /**
      * @param null $parentId
      * @return MpclCategoryRemoteModel[]
+     * @throws MpclConnectorException
      */
     public function getCategories($parentId = null){
         $params = array();
 
-        if(!is_null($parentId)){
+        if($parentId !== null){
             $params['parentId'] = (int) $parentId;
         }
 
-        $arr = $this->doRequest("GetCategories", $params);
+        $arr = $this->doRequest('GetCategories', $params);
 
         foreach($arr as $k => $data){
             $model = new MpclCategoryRemoteModel();
@@ -333,11 +336,12 @@ class MpclConnector
      * @param $id
      * @param bool $resolvePath
      * @return MpclCategoryRemoteModel
+     * @throws MpclConnectorException
      */
     public function getCategory($id, $resolvePath = false){
-        $data = $this->doRequest("GetCategory", array(
-            "id" => (int) $id,
-            "resolvePath" => (boolean) $resolvePath
+        $data = $this->doRequest('GetCategory', array(
+            'id' => (int) $id,
+            'resolvePath' => (boolean) $resolvePath
         ));
 
         $model = new MpclCategoryRemoteModel();
@@ -350,11 +354,12 @@ class MpclConnector
      * @param $id
      * @param $parentId
      * @return bool|mixed
+     * @throws MpclConnectorException
      */
     public function moveCategory($id, $parentId){
-        return $this->doRequest("MoveCategory", array(
-            "id" => (int) $id,
-            "parentId" => (int) $parentId
+        return $this->doRequest('MoveCategory', array(
+            'id' => (int) $id,
+            'parentId' => (int) $parentId
         ));
     }
 
@@ -363,18 +368,20 @@ class MpclConnector
      * @param $name
      * @param $isVisible
      * @return bool|mixed
+     * @throws MpclConnectorException
      */
     public function updateCategory($id, $name, $isVisible){
-        return $this->doRequest("UpdateCategory", array(
-            "id" => (int) $id,
-            "name" => (string) $name,
-            "isVisible" => (boolean) $isVisible
+        return $this->doRequest('UpdateCategory', array(
+            'id' => (int) $id,
+            'name' => (string) $name,
+            'isVisible' => (boolean) $isVisible
         ));
     }
 
     /**
      * @param $data
      * @return bool|mixed
+     * @throws MpclConnectorException
      */
     public function createMachine($data){
         return $this->updateMachine(-1, $data);
@@ -384,9 +391,10 @@ class MpclConnector
      * @param $id
      * @param $data
      * @return bool|mixed
+     * @throws MpclConnectorException
      */
     public function updateMachine($id, $data){
-        return $this->doRequest("UpdateMachine", [
+        return $this->doRequest('UpdateMachine', [
             'id' => (int) $id
         ] + $data);
     }
@@ -395,9 +403,10 @@ class MpclConnector
      * @param $data
      * @param $origName
      * @return MpclPhotoRemoteModel
+     * @throws MpclConnectorException
      */
     public function uploadPhoto($data, $origName){
-        $data = $this->doRequest("UploadPhoto", [
+        $data = $this->doRequest('UploadPhoto', [
             'data' => $data,
             'orig_name' => $origName
         ]);
