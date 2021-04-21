@@ -1,24 +1,22 @@
 {
   "name": "reprostar/mpcl-connector-php",
-  "description": "MyPClist PHP Connector",
-  "minimum-stability": "stable",
+  "description": "PHP library for the MyPCList API",
   "license": "MIT",
+  "homepage": "https://mypclist.net",
   "authors": [
     {
       "name": "pfcode",
-      "email": "mail@pfco.de"
+      "email": "pawel@reprostar.pro",
+      "homepage": "https://reprostar.pro"
     }
   ],
   "autoload": {
     "psr-4": {
-      "Reprostar\\MpclConnector\\": [
-        "src/",
-        "src/Models",
-        "src/Commons"
-      ]
+      "Reprostar\\MpclConnector\\": "src/"
     }
   },
   "require": {
+    "php": ">=5.6.0",
     "ext-json": "*",
     "ext-curl": "*"
   }
