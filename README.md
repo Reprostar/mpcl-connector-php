@@ -1,5 +1,5 @@
 # MyPCList API connector library for PHP
-Official implementation of MyPCList V1 API connector, compatible with PHP 7.0 and later. This library contains a connector
+Official implementation of MyPCList V1 API connector, compatible with PHP 5.6 and later. This library contains a connector
 class used to communicate with an endpoint and classes for all API-accessible MPCL entities.
 
 ### Installation
